@@ -1,13 +1,8 @@
 
-# Assignment 1: Histograms
+# Project 1:
 
-This repository contains the Python source file `A1_submission.py` for the "CMPUT 206 (LEC B1 Winter 2024)" assignment on histograms. The assignment consists of four parts focused on understanding and manipulating image histograms.
 
-The assignment is worth 9% of the overall grade. 
 
-## Submission
-
-Submit the completed `A1_submission.py` file, which includes the implementations of all required functions.
 
 ## Part I: Histogram Computation
 
