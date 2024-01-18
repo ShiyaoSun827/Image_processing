@@ -53,10 +53,6 @@
 
 - Grayscale and RGB images before and after histogram matching.
 
-## Notes
-
-- Ensure all images are present in the same folder as `A1_submission.py`.
-- Remove absolute image paths from the code to prevent errors.
 
 
 
