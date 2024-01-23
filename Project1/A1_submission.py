@@ -51,40 +51,46 @@ def part2_histogram_equalization():
 
     
     """add your code here"""
-  
+    # 64-bin Histogram computed by your code (cannot use in-built functions!)
     n_bins = 64
+    #get height and width of the image
     h = img.shape[0]
     w = img.shape[1]
+    
+    #Initialize histogram array
     hist = np.zeros(n_bins)
+
     for i in np.arange(0,h,1):
         for j in np.arange(0,w,1):
-            temp = img[i,j] // (256/64)
-            hist[int(temp)] += 1
+            #each bin can represent 4 values
+            temp = int(img[i,j] // (256/64))
+            hist[temp] += 1
 
-    cum_hist = np.zeros(n_bins)
-    cum_hist[0] = hist[0]
-    for t in np.arange(1,n_bins,1):
-        cum_hist[t] = cum_hist[t-1] + hist[t]
+    ## HINT: Initialize another image (you can use np.zeros) and update the pixel intensities in every location
+    #initialize cum hist array
+    Cumulative_hist = np.zeros(n_bins)
+    
+    for t in np.arange(0,n_bins,1):
+        if t == 0:
+            Cumulative_hist[t] = hist[t]
+        Cumulative_hist[t] = Cumulative_hist[t-1] + hist[t]
+    #equalization:a' = floor[((k-1)/MN)H(a)+0.5]
     img_eq1 = np.zeros((h,w))    
     for i in np.arange(0,h,1): 
         for j in np.arange(0,w,1):
-            img_eq1[i,j] = np.floor((255.0/(h*w))*cum_hist[img[i,j] // 4]+0.5)
+            temp1 = 255/(h*w)
+            pos = img[i,j] // 4
+            img_eq1[i,j] = np.floor(temp1*Cumulative_hist[pos]+0.5)
+    # Histogram of equalized image
     hist_eq = np.zeros(64) 
     for i in np.arange(0,h,1): 
         for j in np.arange(0,w,1): 
-            num = img_eq1[i,j] // 4  
-            hist_eq[int(num)] += 1 
+            pos = int(img_eq1[i,j] // 4)
+            hist_eq[pos] += 1 
 
-    # 64-bin Histogram computed by your code (cannot use in-built functions!)
-    #hist = ...
 
-    ## HINT: Initialize another image (you can use np.zeros) and update the pixel intensities in every location
 
-    #img_eq1 = ...# Equalized image computed by your code
     
-
-    # Histogram of equalized image
-    #hist_eq = ...
 
     """Plotting code provided here
     Make sure to match the variable names in your code!"""
@@ -111,18 +117,30 @@ def part3_histogram_comparing():
     img2 = io.imread(filename2, as_gray=True)
     
     """add your code here"""
-
+    img1= img_as_ubyte(img1)
+    img2 = img_as_ubyte(img2)
     # Calculate the histograms for img1 and img2 (you can use skimage or numpy)
-    hist1, _ = ...
-    hist2, _ = ...
+    hist1, _ = np.histogram(img1,bins=256,range=(0,256)) 
+    h_day = img1.shape[0]
+    w_day = img1.shape[1] 
 
+    hist2, _= np.histogram(img2,bins=256,range=(0,256))
+    h_night = img2.shape[0]
+    w_night = img2.shape[1]
+    
+    
     # Normalize the histograms for img1 and img2
-    hist1_norm = ...
-    hist2_norm = ...
-
+    
     # Calculate the Bhattacharya coefficient (check the wikipedia page linked on eclass for formula)
     # Value must be close to 0.87
-    bc = ...
+    
+    bc=0 
+    #Since normalized version is defined as: H(i)/(MN), MN is the width * height of the image
+    for i in np.arange (256): 
+        hist1_norm = hist1[i] / (h_day * w_day)
+        hist2_norm = hist2[i] /  (h_night * w_night)
+        bc += math.sqrt(hist1_norm * hist2_norm) 
+
 
     print("Bhattacharyya Coefficient: ", bc)
 
