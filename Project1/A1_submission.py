@@ -249,6 +249,7 @@ def part4_histogram_matching():
     
     n_bins = 256
     out_put2 = np.zeros_like(source_rgb) 
+    #Three channels of RGB
     for channel in range(3):
             
         #Caculate PA,Cumu hist of input
