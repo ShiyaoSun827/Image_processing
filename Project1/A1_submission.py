@@ -148,7 +148,117 @@ def part3_histogram_comparing():
 def part4_histogram_matching():
     filename1 = 'day.jpg'
     filename2 = 'night.jpg'
+	day1 = io.imread("day.jpg")
+    day1 = rgb2gray(day1) 
+    day12 = day1#
+    day1 = img_as_ubyte(day1) 
+    picture_day1, n_day = np.histogram(day1,bins=256,range=(0,256))#
+    h_d = day1.shape[0]#480，
+    w_d = day1.shape[1]#640，
+    #######################################################
+    temp_day1 = np.zeros(256) #pi （day的 normalized histogram） 
+    temp_index = 0 #initializes the index variable to 0.
+    temp_1 = 0 #initializes a temporary variable to 0.
+    
+    for i in picture_day1:
+        temp_day1[temp_index] = temp_1 + i  #adds the current histogram value i to the running sum temp_1, and stores the result in the temp_day1 array at the current index temp_index.
 
+        temp_1 = temp_day1[temp_index] # updates the temporary variable temp_1 to the value just added to temp_day1.
+        temp_index = temp_index + 1 # increments the index variable for the next iteration.
+    temp_index = 0 #resets the index variable to 0.
+    #
+    for i in temp_day1:#
+        temp_day1[temp_index] = i /(h_d * w_d)#算H（i）/MN  divides the current cumulative histogram value i by the total number of pixels in the "day" image (h_d * w_d) to get the normalized cumulative histogram value. The result is stored back in the 
+        
+    ##################################################################
+    night1 = io.imread("night.jpg")  
+    night1 = rgb2gray(night1) 
+    night12 = night1#
+    night1 = img_as_ubyte(night1)
+    picture_night1, n_night = np.histogram(night1,bins=256,range=(0,256))
+    h_n = night1.shape[0]
+    w_n = night1.shape[1]
+    ###################################################################
+    temp_night1 = np.zeros(256) #qi （night的 normalized histogram）
+    temp_index = 0
+    temp_1 = 0
+
+    for i in picture_night1:
+        temp_night1[temp_index] = temp_1 + i
+
+        temp_1 = temp_night1[temp_index]
+        temp_index = temp_index + 1
+    temp_index = 0
+    for i in temp_night1:#
+        temp_night1[temp_index] = i /(h_n * w_n)#算H（i）/MN
+    ############################################################################
+
+    a1 = 0   #This sets the variable a1 to 0, which will be used to keep track of the current index in the normalized cumulative histogram of the reference image 
+    A = np.zeros(256)
+    index = np.arange(len(temp_night1)) #This creates an array index of the same length as the normalized cumulative histogram of the reference image (night1).
+    
+    print(len(temp_day1))
+    for i in index:
+        while temp_day1[i] > temp_night1[a1]:
+
+            a1 = a1 + 1 
+            
+        A[i] = a1
+     
+    out_put = np.zeros((h_n,w_n)) #This creates an array out_put of zeros with the same shape as the output image.
+
+    for I in np.arange(len(day1)):
+        for J in np.arange(len(day1[I])):
+            temp_a = day1[I,J]        
+            out_put[I,J] = A[temp_a]
+           
+
+###############################################################
+   
+    day2 = io.imread("day.jpg")
+    day22 = day2#day22就是第4张图
+    day2 = img_as_ubyte(day2) 
+   
+
+    night2 = io.imread("night.jpg")
+    night22 = night2#night22就是第5张图
+    night2 = img_as_ubyte(night2) 
+    
+
+    out_put1 = io.imread("day.jpg")
+    out_put12 = out_put1# out_put12 是第六张图
+    out_put1 = np.zeros((h_n,w_n))
+    out_put1 = img_as_ubyte(out_put1) 
+    out_put1 = np.cumsum(out_put1)
+    
+
+    plt.subplot(2,3,1)
+    plt.imshow(day12, cmap='gray')
+    plt.title("source_gs")
+
+    plt.subplot(2,3,4)
+    plt.imshow(day22, cmap='gray')
+    plt.title("source_rbg")
+    
+
+    plt.subplot(2,3,2)
+    plt.imshow(night12, cmap='gray')
+    plt.title("template_gs")
+
+
+    plt.subplot(2,3,5)
+    plt.imshow(night22, cmap='gray')
+    plt.title("template_rbg")
+
+    plt.subplot(2,3,3)
+    plt.title("matched_gs")
+    plt.imshow(out_put,cmap='gray')
+
+    plt.subplot(2,3,6)
+    plt.title("matched_rgb")
+    plt.imshow(out_put12,cmap='gray')     
+
+    plt.show()
     #============Grayscale============
 
     # Read in the image
