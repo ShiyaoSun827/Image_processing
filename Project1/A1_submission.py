@@ -164,6 +164,24 @@ def part4_histogram_matching():
     
     
     """add your code here"""
+    #Caculate PA,Cumu hist of input
+    hist = np.zeros(n_bins)
+    h_source = source_gs.shape[0]
+    w_source = source_gs.shape[1]
+    for i in np.arange(0,h_source,1):
+        for j in np.arange(0,w_source,1):
+            #each bin can represent 4 values
+            temp = int(source_gs[i,j]) 
+            hist[temp] += 1
+    n_bins = 256
+    Cumulative_hist = np.zeros(n_bins)
+    
+    for t in np.arange(0,n_bins,1):
+        if t == 0:
+            Cumulative_hist[t] = hist[t]
+        Cumulative_hist[t] = Cumulative_hist[t-1] + hist[t]
+    #cacualte the
+
     matched_gs = ...
 
     fig = plt.figure()
