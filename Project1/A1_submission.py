@@ -148,117 +148,6 @@ def part3_histogram_comparing():
 def part4_histogram_matching():
     filename1 = 'day.jpg'
     filename2 = 'night.jpg'
-	day1 = io.imread("day.jpg")
-    day1 = rgb2gray(day1) 
-    day12 = day1#
-    day1 = img_as_ubyte(day1) 
-    picture_day1, n_day = np.histogram(day1,bins=256,range=(0,256))#
-    h_d = day1.shape[0]#480，
-    w_d = day1.shape[1]#640，
-    #######################################################
-    temp_day1 = np.zeros(256) #pi （day的 normalized histogram） 
-    temp_index = 0 #initializes the index variable to 0.
-    temp_1 = 0 #initializes a temporary variable to 0.
-    
-    for i in picture_day1:
-        temp_day1[temp_index] = temp_1 + i  #adds the current histogram value i to the running sum temp_1, and stores the result in the temp_day1 array at the current index temp_index.
-
-        temp_1 = temp_day1[temp_index] # updates the temporary variable temp_1 to the value just added to temp_day1.
-        temp_index = temp_index + 1 # increments the index variable for the next iteration.
-    temp_index = 0 #resets the index variable to 0.
-    #
-    for i in temp_day1:#
-        temp_day1[temp_index] = i /(h_d * w_d)#算H（i）/MN  divides the current cumulative histogram value i by the total number of pixels in the "day" image (h_d * w_d) to get the normalized cumulative histogram value. The result is stored back in the 
-        
-    ##################################################################
-    night1 = io.imread("night.jpg")  
-    night1 = rgb2gray(night1) 
-    night12 = night1#
-    night1 = img_as_ubyte(night1)
-    picture_night1, n_night = np.histogram(night1,bins=256,range=(0,256))
-    h_n = night1.shape[0]
-    w_n = night1.shape[1]
-    ###################################################################
-    temp_night1 = np.zeros(256) #qi （night的 normalized histogram）
-    temp_index = 0
-    temp_1 = 0
-
-    for i in picture_night1:
-        temp_night1[temp_index] = temp_1 + i
-
-        temp_1 = temp_night1[temp_index]
-        temp_index = temp_index + 1
-    temp_index = 0
-    for i in temp_night1:#
-        temp_night1[temp_index] = i /(h_n * w_n)#算H（i）/MN
-    ############################################################################
-
-    a1 = 0   #This sets the variable a1 to 0, which will be used to keep track of the current index in the normalized cumulative histogram of the reference image 
-    A = np.zeros(256)
-    index = np.arange(len(temp_night1)) #This creates an array index of the same length as the normalized cumulative histogram of the reference image (night1).
-    
-    print(len(temp_day1))
-    for i in index:
-        while temp_day1[i] > temp_night1[a1]:
-
-            a1 = a1 + 1 
-            
-        A[i] = a1
-     
-    out_put = np.zeros((h_n,w_n)) #This creates an array out_put of zeros with the same shape as the output image.
-
-    for I in np.arange(len(day1)):
-        for J in np.arange(len(day1[I])):
-            temp_a = day1[I,J]        
-            out_put[I,J] = A[temp_a]
-           
-
-###############################################################
-   
-    day2 = io.imread("day.jpg")
-    day22 = day2#day22就是第4张图
-    day2 = img_as_ubyte(day2) 
-   
-
-    night2 = io.imread("night.jpg")
-    night22 = night2#night22就是第5张图
-    night2 = img_as_ubyte(night2) 
-    
-
-    out_put1 = io.imread("day.jpg")
-    out_put12 = out_put1# out_put12 是第六张图
-    out_put1 = np.zeros((h_n,w_n))
-    out_put1 = img_as_ubyte(out_put1) 
-    out_put1 = np.cumsum(out_put1)
-    
-
-    plt.subplot(2,3,1)
-    plt.imshow(day12, cmap='gray')
-    plt.title("source_gs")
-
-    plt.subplot(2,3,4)
-    plt.imshow(day22, cmap='gray')
-    plt.title("source_rbg")
-    
-
-    plt.subplot(2,3,2)
-    plt.imshow(night12, cmap='gray')
-    plt.title("template_gs")
-
-
-    plt.subplot(2,3,5)
-    plt.imshow(night22, cmap='gray')
-    plt.title("template_rbg")
-
-    plt.subplot(2,3,3)
-    plt.title("matched_gs")
-    plt.imshow(out_put,cmap='gray')
-
-    plt.subplot(2,3,6)
-    plt.title("matched_rgb")
-    plt.imshow(out_put12,cmap='gray')     
-
-    plt.show()
     #============Grayscale============
 
     # Read in the image
@@ -271,28 +160,59 @@ def part4_histogram_matching():
                              as_gray=True
                              )
     template_gs = img_as_ubyte(template_gs)
-    
-    
     """add your code here"""
-    #Caculate PA,Cumu hist of input
-    hist = np.zeros(n_bins)
-    h_source = source_gs.shape[0]
-    w_source = source_gs.shape[1]
-    for i in np.arange(0,h_source,1):
-        for j in np.arange(0,w_source,1):
-            #each bin can represent 4 values
-            temp = int(source_gs[i,j]) 
-            hist[temp] += 1
     n_bins = 256
-    Cumulative_hist = np.zeros(n_bins)
+
+    #Caculate PA,Cumu hist of input
+    hist,_ = np.histogram(source_gs,bins=256,range=(0,256))
+    height_source = source_gs.shape[0]
+    width_source = source_gs.shape[1]
     
+    
+    Cumulative_hist = np.zeros(n_bins)
     for t in np.arange(0,n_bins,1):
         if t == 0:
             Cumulative_hist[t] = hist[t]
         Cumulative_hist[t] = Cumulative_hist[t-1] + hist[t]
-    #cacualte the
+    PA = np.zeros(n_bins)
+    for h in np.arange(0,n_bins,1):
+        PA[h] = Cumulative_hist[h]/(height_source*width_source)
+    
+    #Caculate PR,Cumu hist of reference
+    hist_reference,_ = np.histogram(template_gs,bins=256,range=(0,256))
+    height_reference= template_gs.shape[0]
+    width_reference = template_gs.shape[1]
+    
+    
+    Cumulative_hist_reference = np.zeros(n_bins)
+    for t_r in np.arange(0,n_bins,1):
+        if t_r == 0:
+            Cumulative_hist_reference[t_r] = hist[t_r]
+        Cumulative_hist_reference[t_r] = Cumulative_hist_reference[t_r-1] + hist_reference[t_r]
+    PR = np.zeros(n_bins)
+    for h_r in np.arange(0,n_bins,1):
+        PR[h_r] = Cumulative_hist_reference[h_r]/(height_reference*width_reference)
+    #Step3
 
-    matched_gs = ...
+    a1 = 0  
+    A = np.zeros(256)  
+    index = np.arange(len(PR)) 
+    
+   
+    for i in index:
+        while PA[i] > PR[a1]:
+
+            a1 = a1 + 1 
+            
+        A[i] = a1
+    #Step4
+    out_put = np.zeros((height_reference,width_reference)) 
+
+    for I in np.arange(len(source_gs)):
+        for J in np.arange(len(source_gs[I])):
+            temp_a = source_gs[I,J]        
+            out_put[I,J] = A[temp_a]
+    matched_gs = out_put
 
     fig = plt.figure()
     gs = plt.GridSpec(1, 3)
@@ -317,15 +237,71 @@ def part4_histogram_matching():
     source_rgb = io.imread(filename1,
                            # as_gray=True
                            )
+    #source_rgb = img_as_ubyte(source_rgb)
     # Read in another image
     template_rgb = io.imread(filename2,
                              # as_gray=True
                              )
-    
+    #template_rgb = img_as_ubyte(template_rgb)
 
     """add your code here"""
     ## HINT: Repeat what you did for grayscale for each channel of the RGB image.
-    matched_rgb = ...
+    
+    n_bins = 256
+    out_put2 = np.zeros_like(source_rgb) 
+    for channel in range(3):
+            
+        #Caculate PA,Cumu hist of input
+        hist_rgb,_ = np.histogram(source_rgb[:,:,channel],bins=256,range=(0,256))
+        height_source_rgb = source_rgb.shape[0]
+        width_source_rgb = source_rgb.shape[1]
+        
+        
+        Cumulative_hist_rgb = np.zeros(n_bins)
+        for t_rgb in np.arange(0,n_bins,1):
+            if t_rgb == 0:
+                Cumulative_hist_rgb[t_rgb] = hist_rgb[t_rgb]
+            Cumulative_hist_rgb[t_rgb] = Cumulative_hist_rgb[t_rgb-1] + hist_rgb[t_rgb]
+        PA_rgb = np.zeros(n_bins)
+        for h_rgb in np.arange(0,n_bins,1):
+            PA_rgb[h_rgb] = Cumulative_hist_rgb[h_rgb]/(height_source_rgb*width_source_rgb)
+        
+        #Caculate PR,Cumu hist of reference
+        hist_reference_rgb,_ = np.histogram(template_rgb[:,:,channel],bins=256,range=(0,256))
+        height_reference_rgb= template_rgb.shape[0]
+        width_reference_rgb = template_rgb.shape[1]
+        
+        
+        Cumulative_hist_reference_rgb = np.zeros(n_bins)
+        for t_r_rgb in np.arange(0,n_bins,1):
+            if t_r_rgb == 0:
+                Cumulative_hist_reference_rgb[t_r_rgb] = hist_reference_rgb[t_r_rgb]
+            Cumulative_hist_reference_rgb[t_r_rgb] = Cumulative_hist_reference_rgb[t_r_rgb-1] + hist_reference_rgb[t_r_rgb]
+        PR_rgb = np.zeros(n_bins)
+        for h_r_rgb in np.arange(0,n_bins,1):
+            PR_rgb[h_r_rgb] = Cumulative_hist_reference_rgb[h_r_rgb]/(height_reference_rgb*width_reference_rgb)
+        #Step3
+        
+        a2 = 0  
+        A2 = np.zeros(256)  
+        index2 = np.arange(len(PR_rgb)) 
+        
+
+        for i in index2:
+            while PA_rgb[i] > PR_rgb[a2]:
+
+                a2 = a2 + 1 
+                
+            A2[i] = a2
+        #Step4
+        
+
+        for I2 in range(0,height_source_rgb):
+            for J2 in range(0,width_source_rgb):
+                temp_a = source_rgb[I2][J2][channel]       
+                out_put2[I2][J2][channel] = A2[temp_a]
+
+    matched_rgb = out_put2
     
     fig = plt.figure()
     gs = plt.GridSpec(1, 3)
