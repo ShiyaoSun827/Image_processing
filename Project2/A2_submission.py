@@ -38,7 +38,7 @@ def part1():
     plt.imshow(Lap, cmap='gray')
     plt.title("Laplace filterd image")
     plt.show()
-
+    #Gaussian filter
     plt.subplot(1, 2, 1) 
     plt.imshow(source_gs, cmap='gray')
     plt.title("Original")
@@ -48,23 +48,44 @@ def part1():
     plt.title(" filterd image ")
     plt.show()
 
+    #filter3
     plt.subplot(1, 2, 1) 
     plt.imshow(source_gs, cmap='gray')
     plt.title("Original")
-    filterd = filtering(source_gs,'filterd')
+    filterd = filtering(source_gs,'filter1')
 
     plt.subplot(1, 2, 2) 
     plt.imshow(filterd, cmap='gray')
     plt.title(" filterd image ")
     plt.show()
+    #filter 4
+    plt.subplot(1, 2, 1) 
+    plt.imshow(source_gs, cmap='gray')
+    plt.title("Original")
+    filterd = filtering(source_gs,'filter2')
 
+    plt.subplot(1, 2, 2) 
+    plt.imshow(filterd, cmap='gray')
+    plt.title(" filterd image ")
+    plt.show()
+    #Enhanced by Laplace
     plt.subplot(1,2,1)
     plt.imshow((source_gs).astype(int), cmap='gray', vmin=0, vmax=255)
-    plt.title("Cameraman")
+    plt.title("Original")
     plt.subplot(1,2,2)
-    out = filtering(source_gs,'Enhance')
+    out = filtering(source_gs,'enhance1')
     plt.imshow((source_gs+out).astype(int), cmap='gray', vmin=0, vmax=255)
-    plt.title("Enhanced Cameraman")
+    plt.title("Enhanced by Laplace")
+    #Enhanced by Guassian
+    plt.subplot(1,2,1)
+    plt.imshow((source_gs).astype(int), cmap='gray', vmin=0, vmax=255)
+    plt.title("Original")
+    plt.subplot(1,2,2)
+    out = filtering(source_gs,'enhance2')
+    plt.imshow((source_gs+out).astype(int), cmap='gray', vmin=0, vmax=255)
+    plt.title("Enhanced by Gaussian")
+
+
 
 
 
@@ -87,37 +108,135 @@ def filtering(source_gs,filter):
                            [0,-1,0]
 
         ])
-        #padding first,get the h value and w value
-        h_kernel = kernel.shape[0]
-        w_kernel = kernel.shape[1]
-        h_padding = np.cast['int']((h_kernel - 1.) / 2.)
-        w_padding = np.cast['int']((w_kernel - 1.) / 2.)
-        #pad_img = np.zeros((source_gs.shape[0] + h_kernel*2,source_gs.shape[1] + w_kernel*2))
-        pad_img = np.zeros((source_gs.shape[0] + h_padding*2,source_gs.shape[1] + w_padding*2))
-        H = pad_img.shape[0]
-        W = pad_img.shape[1]
-        #get the height and width of the source and the kernel
-        h = source_gs.shape[0]
+    elif filter =='Gaussian':
+        kernel = (1/273) * np.array([
+            [1,  4,   7,   4,  1],
+            [4, 16, 26, 16, 4],
+            [7, 26, 41, 26, 7],
+            [4, 16, 26, 16, 4],
+            [1,   4,   7,   4, 1]
+        ])
+        
+    elif filter == 'filter1':
+        
+        kernel = np.array([
+            [0,0,0,0,0],
+            [0,1,0,1,0],
+            [0,0,0,1,0]
+
+        ])
+    elif filter == 'filter2':
+        kernel = np.array([
+            [0,0,0], [6,0,6],[0,0,0]
+        ]) 
+    elif filter =='enhance1':
+        temp_h  = source_gs.shape[0]
+        temp_w = source_gs.shape[1]
+        source_gs = source_gs.astype('float64')
+        kernel = np.array([[0,-1,0],
+                           [-1,4,-1],
+                           [0,-1,0]
+
+        ])
+        h = source_gs.shape[0] 
         w = source_gs.shape[1]
-        #assign the gray-scale to the pad_img
-        #pad_img[h_kernel:(h_kernel + h),w_kernel:(w_kernel+w)] = source_gs
-        pad_img[h_padding:(h_padding + h),w_padding:(w_padding+w)] = source_gs
-        #for i from H-h-1,for j from W-w-1,for m from -h to h,for n from -w to w
-        #output = np.zeros((h+h_kernel*2,w+w_kernel*2))
-        output = np.zeros((h+h_padding*2,w+w_padding*2))
-        '''
-        for i in np.arange(H,H-h_kernel,1):
-            for j in np.arange(W,W-w_kernel,1):
-                for m in np.arange(-h_kernel,h_kernel+1,1):
-                    for n in np.arange(-w_kernel,w_kernel+1,1):
-                        output[i,j] += source_gs[i+m,j+n] * kernel[m+h_kernel,n+w_kernel]
-        '''
-        for i in np.arange(h_padding,h-h_padding,1):
-            for j in np.arange(w_padding,w-w_padding,1):
-                for m in np.arange(-h_padding,h_padding+1,1):
-                    for n in np.arange(-w_padding,w_padding+1,1):
-                        output[i,j] += source_gs[i+m,j+n] * kernel[m+h_padding,n+w_padding]
-        return output
+        h_image,w_image = source_gs.shape
+    
+        h_image,w_image = source_gs.shape 
+        gker = np.array([[0, -1, 0], [-1,4,-1],[0,-1,0]]) 
+        h_ker,w_ker = gker.shape 
+    
+        hf_ker = np.cast['int']((h_ker-1.)/2.) 
+        wf_ker = np.cast['int']((w_ker-1.)/2.) 
+        
+        padding = np.zeros((h + hf_ker * 2 , w + w_ker *2 )) 
+        source_gs = source_gs.astype('float64')
+        output_padding = np.zeros_like(source_gs)
+
+        padding[hf_ker:(h+hf_ker), wf_ker:(w+wf_ker)] = source_gs
+
+    
+        for i in np.arange(hf_ker,h_image-hf_ker,1):
+            for j in np.arange(wf_ker,w_image-wf_ker,1):
+                for l in np.arange(-hf_ker,hf_ker+1,1):
+                    for m in np.arange(-wf_ker,wf_ker+1,1):
+                        output_padding[i,j] += source_gs[i+l,j+m]*gker[l+hf_ker,m+wf_ker]
+        return output_padding
+    elif filter == 'enhance2':
+        temp_h  = source_gs.shape[0]
+        temp_w = source_gs.shape[1]
+        source_gs = source_gs.astype('float64')
+        kernel = np.array([
+            [1,  4,   7,   4,  1],
+            [4, 16, 26, 16, 4],
+            [7, 26, 41, 26, 7],
+            [4, 16, 26, 16, 4],
+            [1,   4,   7,   4, 1]
+        ])
+        h = source_gs.shape[0] 
+        w = source_gs.shape[1]
+        h_image,w_image = source_gs.shape
+    
+        h_image,w_image = source_gs.shape 
+        gker = np.array([[0, -1, 0], [-1,4,-1],[0,-1,0]]) 
+        h_ker,w_ker = gker.shape 
+    
+        hf_ker = np.cast['int']((h_ker-1.)/2.) 
+        wf_ker = np.cast['int']((w_ker-1.)/2.) 
+        
+        padding = np.zeros((h + hf_ker * 2 , w + w_ker *2 )) 
+        source_gs = source_gs.astype('float64')
+        output_padding = np.zeros_like(source_gs)
+
+        padding[hf_ker:(h+hf_ker), wf_ker:(w+wf_ker)] = source_gs
+
+    
+        for i in np.arange(hf_ker,h_image-hf_ker,1):
+            for j in np.arange(wf_ker,w_image-wf_ker,1):
+                for l in np.arange(-hf_ker,hf_ker+1,1):
+                    for m in np.arange(-wf_ker,wf_ker+1,1):
+                        output_padding[i,j] += source_gs[i+l,j+m]*gker[l+hf_ker,m+wf_ker]
+        return output_padding
+    
+    
+
+    #padding first,get the h value and w value
+    h_kernel = kernel.shape[0]
+    w_kernel = kernel.shape[1]
+    h_padding = np.cast['int']((h_kernel - 1.) / 2.)
+    w_padding = np.cast['int']((w_kernel - 1.) / 2.)
+    #pad_img = np.zeros((source_gs.shape[0] + h_kernel*2,source_gs.shape[1] + w_kernel*2))
+    
+    #pad_img = np.zeros((temp_h + h_padding*2,temp_w + w_padding*2))
+    
+
+    pad_img = np.zeros((source_gs.shape[0] + h_padding*2,source_gs.shape[1] + w_padding*2))
+    H = pad_img.shape[0]
+    W = pad_img.shape[1]
+    #get the height and width of the source and the kernel
+    h = source_gs.shape[0]
+    w = source_gs.shape[1]
+    #assign the gray-scale to the pad_img
+    #pad_img[h_kernel:(h_kernel + h),w_kernel:(w_kernel+w)] = source_gs
+    pad_img[h_padding:(h_padding + h),w_padding:(w_padding+w)] = source_gs
+    #for i from H-h-1,for j from W-w-1,for m from -h to h,for n from -w to w
+    #output = np.zeros((h+h_kernel*2,w+w_kernel*2))
+    #output = np.zeros((h+h_padding*2,w+w_padding*2))
+    output = np.zeros((source_gs))
+    '''
+    for i in np.arange(H,H-h_kernel,1):
+        for j in np.arange(W,W-w_kernel,1):
+            for m in np.arange(-h_kernel,h_kernel+1,1):
+                for n in np.arange(-w_kernel,w_kernel+1,1):
+                    output[i,j] += source_gs[i+m,j+n] * kernel[m+h_kernel,n+w_kernel]
+    '''
+    for i in np.arange(h_padding,h-h_padding,1):
+        for j in np.arange(w_padding,w-w_padding,1):
+            for m in np.arange(-h_padding,h_padding+1,1):
+                for n in np.arange(-w_padding,w_padding+1,1):
+                    output[i,j] += source_gs[i+m,j+n] * kernel[m+h_padding,n+w_padding]
+    return output
+    '''
     elif filter == 'Gaussian':
         
        
@@ -167,31 +286,9 @@ def filtering(source_gs,filter):
                     for m in np.arange(-wf_ker,wf_ker+1,1):
                         output_padding[i,j] += source_gs[i+l,j+m]*gker[l+hf_ker,m+wf_ker]
         return output_padding
-    elif filter == 'Enhance':
-        h = source_gs.shape[0] 
-        w = source_gs.shape[1]
-        h_image,w_image = source_gs.shape
+    '''
     
-        h_image,w_image = source_gs.shape 
-        gker = np.array([[0, -1, 0], [-1,4,-1],[0,-1,0]]) 
-        h_ker,w_ker = gker.shape 
-    
-        hf_ker = np.cast['int']((h_ker-1.)/2.) 
-        wf_ker = np.cast['int']((w_ker-1.)/2.) 
-        
-        padding = np.zeros((h + hf_ker * 2 , w + w_ker *2 )) 
-        source_gs = source_gs.astype('float64')
-        output_padding = np.zeros_like(source_gs)
 
-        padding[hf_ker:(h+hf_ker), wf_ker:(w+wf_ker)] = source_gs
-
-    
-        for i in np.arange(hf_ker,h_image-hf_ker,1):
-            for j in np.arange(wf_ker,w_image-wf_ker,1):
-                for l in np.arange(-hf_ker,hf_ker+1,1):
-                    for m in np.arange(-wf_ker,wf_ker+1,1):
-                        output_padding[i,j] += source_gs[i+l,j+m]*gker[l+hf_ker,m+wf_ker]
-        return output_padding
 
 
 
@@ -209,26 +306,12 @@ def part2():
 
     temp_noisy = noisy
     #apply median filter to remove the noise
-    image_processed_by_median = cv2.medianBlur(temp_noisy, 5)#apply the medianBlur filter
-    #save the image  
-    mean_image = "mean_image.jpg"
-    cv2.imwrite(mean_image,image_processed_by_median)
- 
-   
-    #Apply a Gaussian filter to the same noisy image.
-    '''
-    We should specify the width and height of the kernel which should be positive and odd.
-    We also should specify the standard deviation in the X and Y directions, 
-    sigmaX and sigmaY respectively. 
-    If only sigmaX is specified, sigmaY is taken as the same as sigmaX. 
-    If both are given as zeros, they are calculated from the kernel size. 
-    Gaussian blurring is highly effective in removing Gaussian noise from an image.
-    '''
-    image_processed_by_Guassian = cv2.GaussianBlur(temp_noisy,(5,5),0) 
-    #save the image
-    Gaussian_image = "Gaussian_image.jpg"
-    cv2.imwrite(Gaussian_image,image_processed_by_Guassian)
+    #Apply the medianBlur filter
+    image_processed_by_median = cv2.medianBlur(temp_noisy, 5)
     
+    #Apply a Gaussian filter to the same noisy image.
+    image_processed_by_Guassian = cv2.GaussianBlur(temp_noisy,(5,5),0) 
+ 
     #output three images
     plt.subplot(1, 3, 1) 
     plt.imshow(noisy, cmap='gray')
@@ -242,6 +325,15 @@ def part2():
     plt.imshow(image_processed_by_Guassian, cmap='gray')
     plt.title("Gaussian")
     plt.show()
+    #Response toward part2:
+    '''
+    We should specify the width and height of the kernel which should be positive and odd.
+    We also should specify the standard deviation in the X and Y directions, 
+    sigmaX and sigmaY respectively. 
+    If only sigmaX is specified, sigmaY is taken as the same as sigmaX. 
+    If both are given as zeros, they are calculated from the kernel size. 
+    Gaussian blurring is highly effective in removing Gaussian noise from an image.
+    '''
 
 
 def part3():
