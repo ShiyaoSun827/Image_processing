@@ -12,7 +12,7 @@ def part1():
     filename_gridG = 'gridG.bmp'
 
     # read image
-    img = io.imread(filename_Grayimage, as_gray =True)
+    img = io.imread(filename_gridG, as_gray =True)
     h,w = img.shape
 
     # our final image will be a 3 dimentional image with 3 channels
@@ -42,6 +42,7 @@ def part1():
     # TODO: show green (IR) in first subplot (221) and add title - refer to rgb one for hint on plotting
     plt.figure(figsize=(10,8))
     # ...
+    img = io.imread(filename_gridR, as_gray =True)
 
     IR = np.copy(img)
 
@@ -71,6 +72,7 @@ def part1():
     # ...
     # TODO: show IB in third subplot () and title
     # ...
+    img = io.imread(filename_gridB, as_gray =True)
     IB = np.copy(img)
 
     for row in range(0,h,4):
@@ -98,11 +100,20 @@ def part1():
 
 
     # TODO: merge the three channels IG, IB, IR in the correct order
-    rgb[:,:,1]=IG
+    #rgb[:,:,1]=IG
     # ...
 
 
     # TODO: show rgb image in final subplot (224) and add title
+    plt.subplot(221)
+    plt.imshow(IG),plt.title('IG')
+    
+    plt.subplot(222)
+    plt.imshow(IR),plt.title('IR')
+    
+    plt.subplot(223)
+    plt.imshow(IB),plt.title('IB')
+   
     plt.subplot(224)
     plt.imshow(rgb),plt.title('rgb')
     plt.show()

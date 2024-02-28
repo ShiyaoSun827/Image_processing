@@ -125,8 +125,7 @@ def part4():
 
     # TODO: merge the alpha added image (only change the next line)
     # merged = ...
-    alpha = merged[..., 3]
-    merged /= np.maximum(alpha, 1)[..., np.newaxis]
+    
     merged = img0 + img1
 
     alpha = merged[..., 3]

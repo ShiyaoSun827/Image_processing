@@ -23,7 +23,14 @@ def makePalette(colours):
 # Returns a kd-tree palette with those colours
 def findPalette(image, nColours):
     # TODO: perform KMeans clustering to get 'colours' --  the computed k means
-
+    a = image.shape
+    temp_image = image.copy()
+    img_a = temp_image.reshape(-1,a[2])
+    kmeans = KMeans(n_clusters = nColours)
+    img_k = kmeans.fit_predict(img_a)
+    colours = kmeans.cluster_centers_
+    return makePalette(colours)
+'''
     colours_img = np.zeros((50, int(nColours*50), 3), dtype=np.float32)
     start_id = 0
     for col_id in range(nColours):
@@ -37,6 +44,7 @@ def findPalette(image, nColours):
     plt.imshow(colours_img)
 
     return makePalette(colours)
+    '''
 
 
 def ModifiedFloydSteinbergDitherColor(image, palette):
