@@ -30,9 +30,36 @@ def part1():
             IG[row+3,col]= (int(img[row+2,col])+int(img[row+3,col+1]))/2                    # M
             # ...
 
+            IG[row, col+1] = (int(img[row, col])+int(img[row, col+2]))/2
+            IG[row, col+3] = (int(img[row, col+2])+int(img[row+1, col+3]))/2
+            IG[row+1, col] = (int(img[row, col])+int(img[row+2, col]))/2
+            IG[row+1, col+2] = (int(img[row, col+2])+int(img[row+2, col+2])+int(img[row+1, col+1])+int(img[row+1, col+3]))/4
+            IG[row+2, col+1] = (int(img[row+1, col+1])+int(img[row+3, col+1])+int(img[row+2, col])+int(img[row+2, col+2]))/4
+            IG[row+2, col+3] = (int(img[row+1, col+3])+int(img[row+3, col+3]))/2
+            IG[row+3, col] = (int(img[row+2, col])+int(img[row+3, col+1]))/2
+            IG[row+3, col+2] = (int(img[row+3, col+1])+int(img[row+3, col+3]))/2
+
     # TODO: show green (IR) in first subplot (221) and add title - refer to rgb one for hint on plotting
     plt.figure(figsize=(10,8))
     # ...
+
+    IR = np.copy(img)
+
+    for row in range(0,h,4):
+        for col in range(0,w,4): 
+            IR[row, col+2] = (int(img[row, col+1]) + int(img[row, col+3]))/2
+            IR[row+1, col+1] = (int(img[row, col+1]) + int(img[row+2, col+1]))/2
+            IR[row+1, col+2] = (int(img[row, col+1]) + int(img[row+2, col+1]) + int(img[row, col+3]) + int(img[row+2, col+3]))/4
+            IR[row+1, col+3] = (int(img[row, col+3]) + int(img[row+2, col+3]))/2
+            IR[row+2, col+2] = (int(img[row+2, col+3]) + int(img[row+2, col+1]))/2
+
+            IR[row, col] = IR[row, col+1]
+            IR[row+1, col] = IR[row+1, col+1]
+            IR[row+2, col] = IR[row+2, col+1]
+            IR[row+3, col] = IR[row+2, col+1]
+            IR[row+3, col+1] = IR[row+2, col+1]
+            IR[row+3, col+2] = IR[row+2, col+2]
+            IR[row+3, col+3] = IR[row+2, col+3]
 
 
     # TODO: reconstruction of the red channel IR (simiar to loops above), 
@@ -44,6 +71,30 @@ def part1():
     # ...
     # TODO: show IB in third subplot () and title
     # ...
+    IB = np.copy(img)
+
+    for row in range(0,h,4):
+        for col in range(0,w,4): 
+            IB[row+1, col+1] = (int(img[row+1, col]) + int(img[row+1, col+2]))/2
+            IB[row+2, col] = (int(img[row+1, col]) + int(img[row+3, col]))/2
+            IB[row+2, col+1] = (int(img[row+1, col]) + int(img[row+1, col+2]) + int(img[row+3, col]) + int(img[row+3, col+2]))/4
+            IB[row+2, col+2] = (int(img[row+1, col+2]) + int(img[row+3, col+2]))/2
+            IB[row+3, col+1] = (int(img[row+3, col]) + int(img[row+3, col+2]))/2
+
+            IB[row, col] = IB[row+1, col]
+            IB[row, col+1] = IB[row+1, col+1]
+            IB[row, col+2] = IB[row+1, col+2]
+            IB[row, col+3] = IB[row+1, col+2]
+            IB[row+1, col+3] = IB[row+1, col+2]
+            IB[row+2, col+3] = IB[row+2, col+2]
+            IB[row+3, col+3] = IB[row+3, col+2]
+
+
+    # merge the channels
+    rgb[:, :, 0] = IR
+    rgb[:, :, 1] = IG
+    rgb[:, :, 2] = IB
+
 
 
     # TODO: merge the three channels IG, IB, IR in the correct order
