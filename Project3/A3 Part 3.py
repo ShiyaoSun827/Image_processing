@@ -74,7 +74,7 @@ def rotate_image(image):
                 out_img[out_y,out_x] = image[input_y,input_x]
 
 
-    return out_img, Tr
+    return out_img, Tr_inv
 
 
 
@@ -111,7 +111,7 @@ def scale_image(image):
             if input_x >= 0 and input_x < w and input_y >= 0 and input_y < h:
                 out_img[out_y,out_x] = image[input_y,input_x]
 
-    return out_img, Ts
+    return out_img, Ts_inv
 
 
 
@@ -148,7 +148,7 @@ def skew_image(image):
                 out_img[out_y,out_x] = image[input_y,input_x]
 
 
-    return out_img, Tskew
+    return out_img, Tskew_inv
 
 
 def combined_warp(image):
@@ -169,8 +169,9 @@ def combined_warp(image):
     trans_mat, trans_mat_inv = calculate_trans_mat(image)
 
     Tc = Tskew_inv @ Tr_inv @ Ts_inv
+    
     Tc_m = trans_mat_inv @ Tc @ trans_mat
-
+    #
     # apply combined transformation to image
     out_img = np.zeros_like(image)
     for out_y in range(h):
