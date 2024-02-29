@@ -138,9 +138,7 @@ def part4():
     # an average.
 
 
-    plt.figure(figsize=(10,8))
-    plt.imshow(merged, cmap="gray")
-    plt.show()
+    
     
     from skimage.feature import plot_matches
     # TODO: randomly select 10 inlier matches and show them using plot_matches

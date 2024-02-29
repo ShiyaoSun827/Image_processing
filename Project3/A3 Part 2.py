@@ -28,7 +28,7 @@ def findPalette(image, nColours):
     start_id = 0
     for col_id in range(nColours):
         end_id = start_id + 50
-        colours_img[:, start_id:end_id, :] = colours[col_id, :]
+        colours_img[:, start_id:end_id, :] = image[col_id, :]
         start_id = end_id
 
     print(f'colours:\n{colours}')
