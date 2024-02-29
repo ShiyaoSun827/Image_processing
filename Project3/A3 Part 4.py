@@ -15,6 +15,8 @@ def part4():
     ''' Stitch two images together '''
     image0 = io.imread('im1.jpg', True)
     image1 = io.imread('im2.jpg', True)
+    image00 = io.imread('im1.jpg')
+    image11 = io.imread('im2.jpg')
 
 
     plt.figure(figsize=(8,12))
@@ -135,6 +137,9 @@ def part4():
     # how many images were combined to make up each
     # pixel.  Divide by the number of images to get
     # an average.
+    plt.figure(figsize=(10,8))
+    plt.imshow(merged, cmap="gray")
+    plt.show()
 
 
     
@@ -142,9 +147,19 @@ def part4():
     from skimage.feature import plot_matches
     # TODO: randomly select 10 inlier matches and show them using plot_matches
     # ...
-    plt.figure(figsize=(10,8))
-    plt.imshow(merged, cmap="gray")
+    inlier_idxs = np.where(inliers)[0]  # Get the indices of inliers
+    if len(inlier_idxs) > 10:
+        selected_idxs = np.random.choice(inlier_idxs, 10, replace=False)
+    else:
+        selected_idxs = inlier_idxs  # Use all inliers if there are 10 or less
+
+    # Plot the selected matches
+    fig, ax = plt.subplots(nrows=1, ncols=1)
+    plot_matches(ax, image00, image11, key1, key2, match[selected_idxs],keypoints_color=None)
+    
+    ax.set_title("Randomly Selected Inlier Matches")
     plt.show()
+    
 
 
 if __name__ == "__main__":
