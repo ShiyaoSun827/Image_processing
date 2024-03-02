@@ -22,14 +22,14 @@ def calculate_trans_mat(image):
     # ...
     h, w = image.shape[:2]
     cy, cx = h/2, w/2
-    # translation matrix to center image to origin
+    # trans m to center image to origin
     trans_mat = np.array([[1, 0, -cx],
                           [0, 1, -cy],
-                          [0, 0, 1]])
-    # inverse translation matrix to shift image back to its original position
+                          [0, 0, 1  ]])
+    # inverse trans mto shift image back to its original position
     trans_mat_inv = np.array([[1, 0, cx],
                               [0, 1, cy],
-                              [0, 0, 1]])
+                              [0, 0, 1 ]])
     
     return trans_mat, trans_mat_inv
 
@@ -48,41 +48,28 @@ def rotate_image(image):
     angle_rad = np.radians(angle)
     Tr = np.array([[np.cos(angle_rad),-np.sin(angle_rad), 0],
                    [np.sin(angle_rad), np.cos(angle_rad), 0],
-                   [0, 0, 1]])  
+                   [0,                    0,              1]])  
 
     # TODO: compute inverse transformation to go from output to input pixel locations
-    Tr_inv = ...
-
-    out_img = np.zeros_like(image)
-    for out_y in range(h):
-        for out_x in range(w):
-            # TODO: find input pixel location from output pixel ocation and inverse transform matrix, copy over value from input location to output location
-            ...
     Tr_inv = np.linalg.inv(Tr)
-    
-    
     Tr_inv_m = trans_mat_inv @ Tr_inv @ trans_mat
 
-
     out_img = np.zeros_like(image)
     for out_y in range(h):
         for out_x in range(w):
             # TODO: find input pixel location from output pixel ocation and inverse transform matrix, copy over value from input location to output location
-            input_coords = Tr_inv_m @ np.array([out_y, out_x, 1])
-            input_y, input_x = int(input_coords[0]) , int(input_coords[1])
-            if input_x >= 0 and input_x < w and input_y >= 0 and input_y < h:
-                out_img[out_y,out_x] = image[input_y,input_x]
-
-
+            temp = np.array([out_y, out_x, 1])
+            coords = Tr_inv_m @ temp
+            
+            in_x = int(coords[1])
+            in_y = int(coords[0])
+            if in_x >= 0 and in_x < w and in_y < h:
+                if  in_y >= 0 :
+                    out_img[out_y,out_x] = image[in_y,in_x]
     return out_img, Tr_inv
-
-
-
 def scale_image(image):
     ''' scale image and return '''
     # TODO: implement this function, similar to above
-    out_img = np.zeros_like(image)
-    Ts = np.array([])
     out_img = np.zeros_like(image)
     Ts = np.array([])
     h, w = image.shape[:2]
@@ -90,14 +77,12 @@ def scale_image(image):
     # Scaling matrix
     Ts = np.array([[2.5, 0, 0],
                    [0, 1.5, 0],
-                   [0, 0, 1]])
+                   [0, 0,   1]])
 
     Ts_inv = np.linalg.inv(Ts)
 
-    # Calculate the transformation matrix to shift the center of the image to the origin
     trans_mat, trans_mat_inv = calculate_trans_mat(image)
 
-    # Calculate the inverse of the combined transformation matrix
     Ts_inv_m = trans_mat_inv @ Ts_inv @ trans_mat
 
 
@@ -106,10 +91,14 @@ def scale_image(image):
     for out_y in range(h):
         for out_x in range(w):
             # TODO: find input pixel location from output pixel ocation and inverse transform matrix, copy over value from input location to output location
-            input_coords = Ts_inv_m @ np.array([out_y, out_x, 1])
-            input_y, input_x = int(input_coords[0]) , int(input_coords[1])
-            if input_x >= 0 and input_x < w and input_y >= 0 and input_y < h:
-                out_img[out_y,out_x] = image[input_y,input_x]
+            temp = np.array([out_y, out_x, 1])
+            coords = Ts_inv_m @ temp
+            
+            in_x = int(coords[1])
+            in_y = int(coords[0])
+            if in_x >= 0 and in_x < w and in_y < h:
+                if  in_y >= 0 :
+                    out_img[out_y,out_x] = image[in_y,in_x]
 
     return out_img, Ts_inv
 
@@ -123,17 +112,16 @@ def skew_image(image):
     trans_mat, trans_mat_inv = calculate_trans_mat(image)
     h, w = image.shape[:2]
 
-    # Define skew parameters
+    #skew parameters
     skew_x = 0.2
     skew_y = 0.2
 
-    # Define skew transformation matrix
+    # skew trans matrix
     Tskew = np.array([[1, skew_x, 0],
                       [skew_y, 1, 0],
-                      [0, 0, 1]])
+                      [0,      0, 1]])
     
     Tskew_inv = np.linalg.inv(Tskew)
-    # Define inverse skew transformation matrix
     Tskew_inv_m = trans_mat_inv @ Tskew_inv @ trans_mat
     
 
@@ -142,10 +130,14 @@ def skew_image(image):
     for out_y in range(h):
         for out_x in range(w):
             # TODO: find input pixel location from output pixel ocation and inverse transform matrix, copy over value from input location to output location
-            input_coords = Tskew_inv_m @ np.array([out_y, out_x, 1])
-            input_y, input_x = int(input_coords[0]) , int(input_coords[1])
-            if input_x >= 0 and input_x < w and input_y >= 0 and input_y < h:
-                out_img[out_y,out_x] = image[input_y,input_x]
+            temp = np.array([out_y, out_x, 1])
+            coords = Tskew_inv_m @ temp
+            
+            in_x = int(coords[1])
+            in_y = int(coords[0])
+            if in_x >= 0 and in_x < w and in_y < h:
+                if  in_y >= 0 :
+                    out_img[out_y,out_x] = image[in_y,in_x]
 
 
     return out_img, Tskew_inv
@@ -160,27 +152,24 @@ def combined_warp(image):
     Tc = np.array([])
     h, w = image.shape[:2]
     _, Tr_inv = rotate_image(image)
-    
     _, Ts_inv = scale_image(image)
-    
     _, Tskew_inv = skew_image(image)
-    
-    # calculate combined transformation matrix
     trans_mat, trans_mat_inv = calculate_trans_mat(image)
 
     Tc = Tskew_inv @ Tr_inv @ Ts_inv
-    
     Tc_m = trans_mat_inv @ Tc @ trans_mat
-    #
-    # apply combined transformation to image
     out_img = np.zeros_like(image)
     for out_y in range(h):
         for out_x in range(w):
             # TODO: find input pixel location from output pixel ocation and inverse transform matrix, copy over value from input location to output location
-            input_coords = Tc_m @ np.array([out_y, out_x, 1])
-            input_y, input_x = int(input_coords[0]) , int(input_coords[1])
-            if input_x >= 0 and input_x < w and input_y >= 0 and input_y < h:
-                out_img[out_y,out_x] = image[input_y,input_x]
+            temp = np.array([out_y, out_x, 1])
+            coords = Tc_m @ temp
+            
+            in_x = int(coords[1])
+            in_y = int(coords[0])
+            if in_x >= 0 and in_x < w and in_y < h:
+                if  in_y >= 0 :
+                    out_img[out_y,out_x] = image[in_y,in_x]
     
     return out_img, Tc
     
@@ -198,18 +187,18 @@ def combined_warp_biinear(image):
 
 
     angle_rad = np.radians(angle)
-    Tr_inv = np.array([[np.cos(angle_rad),np.sin(angle_rad), 0],
-                   [-np.sin(angle_rad), np.cos(angle_rad), 0],
-                   [0, 0, 1]])  
+    Tr_inv = np.array([[np.cos(angle_rad), np.sin(angle_rad), 0],
+                      [-np.sin(angle_rad), np.cos(angle_rad), 0],
+                      [0,                                 0, 1]])  
     
 
     Ts_inv = np.array([[1/2.5, 0, 0],
-                   [0, 1/1.5, 0], 
-                   [0, 0, 1]])
+                       [0, 1/1.5, 0], 
+                       [0, 0,     1]])
 
     Tskew_inv = np.array([[1, -0.2, 0],
-                      [-0.2, 1, 0],
-                      [0, 0, 1]])
+                          [-0.2, 1, 0],
+                          [0,    0, 1]])
     
 
     Tc = Tskew_inv @ Tr_inv @ Ts_inv
@@ -217,14 +206,15 @@ def combined_warp_biinear(image):
 
     for out_y in range(h):
         for out_x in range(w):
-            input_coords = Tc_inv_m @ np.array([out_y, out_x, 1])
-            input_y = input_coords[0]
-            input_x = input_coords[1]
-            decimal_y, int_y = math.modf(input_y)
-            decimal_x, int_x = math.modf(input_x)
-            if (0 <= input_y) and (input_y < 225) and (0 <= input_x) and (input_x < 225):
-                out_img[out_y][out_x] = ((1-decimal_y) * image[int(int_y)][int(int_x)] + decimal_y * image[int(int_y) + 1][int(int_x)]) * (1 - decimal_x) + ((1-decimal_y) * image[int(int_y)][int(int_x) + 1] +decimal_y*image[int(int_y)][int(int_x)+1])*decimal_x
-   
+            coords = Tc_inv_m @ np.array([out_y, out_x, 1])
+            iny = coords[0]
+            inx = coords[1]
+            ydec, y = math.modf(iny)
+            xdec, x = math.modf(inx)
+            if (0 <= iny) and (iny < 225) and (0 <= inx) and (inx < 225):
+                top = ((1-ydec) * image[int(y)][int(x)] + ydec * image[int(y) + 1][int(x)]) * (1 - xdec)
+                bottom = ((1-ydec) * image[int(y)][int(x) + 1] +ydec*image[int(y)][int(x)+1])*xdec
+                out_img[out_y][out_x] = bottom + top
 
 
     return out_img

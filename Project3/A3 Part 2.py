@@ -23,28 +23,22 @@ def makePalette(colours):
 # Returns a kd-tree palette with those colours
 def findPalette(image, nColours):
     # TODO: perform KMeans clustering to get 'colours' --  the computed k means
+    
     a = image.shape
     temp_image = image.copy()
     img_a = temp_image.reshape(-1,a[2])
     kmeans = KMeans(n_clusters = nColours)
-    img_k = kmeans.fit_predict(img_a)
+    
+    kmeans.fit(img_a)
     colours = kmeans.cluster_centers_
-    return makePalette(colours)
-'''
-    colours_img = np.zeros((50, int(nColours*50), 3), dtype=np.float32)
-    start_id = 0
-    for col_id in range(nColours):
-        end_id = start_id + 50
-        colours_img[:, start_id:end_id, :] = image[col_id, :]
-        start_id = end_id
-
-    print(f'colours:\n{colours}')
-
-    plt.figure(figsize=(10, 5))
-    plt.imshow(colours_img)
-
-    return makePalette(colours)
+    print(colours)
     '''
+    
+    k = KMeans(n_clusters = nColours).fit(a)
+    colours = k.cluster_centers_
+    print(colours)
+    '''
+    return makePalette(colours)
 
 
 def ModifiedFloydSteinbergDitherColor(image, palette):
@@ -73,17 +67,23 @@ def ModifiedFloydSteinbergDitherColor(image, palette):
 
     # TODO: implement agorithm for RGB image (hint: you need to handle error in each channel separately)
     h,w,d = image.shape
-    #print(h,w)
-    for i in range(h-1):
-      for j in range(w-1):
-        oldpixel = image[j][i]
-        newpixel = nearest(palette, oldpixel)
-        image[j][i] = newpixel
-        quant_error = oldpixel - newpixel
-        image[j + 1][i] = image[j + 1][i] + quant_error * 11 / 26
-        image[j - 1][i + 1] = image[j - 1][i + 1] + quant_error * 5 / 26
-        image[j][i + 1] = image[j][i + 1] + quant_error * 7 / 26
-        image[j + 1][i + 1] = image[j + 1][i + 1] + quant_error * 3 / 26
+    for  y in range(h-1):
+        for  x in range(w-1):
+            oldpixel  = image[x][y]
+            newpixel  = nearest(palette,oldpixel) # Determine the new colour for the current pixel from palette
+            image[x][y]  = newpixel 
+            quant_error  = oldpixel - newpixel
+
+            #total_abs_err = total_abs_err + abs(quant_error)
+
+            image[x + 1][y    ] = image[x + 1][y    ] + quant_error * 11 / 26 
+            image[x - 1][y + 1] = image[x - 1][y + 1] + quant_error * 5 / 26
+            image[x    ][y + 1] = image[x    ][y + 1] + quant_error * 7 / 26
+            image[x + 1][y + 1] = image[x + 1][y + 1] + quant_error * 3 / 26
+
+
+        
+    #avg_abs_err = total_abs_err / image.size
 
     return image
 
@@ -107,6 +107,7 @@ if __name__ == "__main__":
     palette = findPalette(image, nColours)
     colours = palette.data
     colours = img_as_float([colours.astype(np.ubyte)])[0]
+    
 
     # call dithering function
     img = ModifiedFloydSteinbergDitherColor(image, palette)
