@@ -56,7 +56,7 @@ def part4():
     # model_robust, inliers = ransac ...
     src = key2[match[:, 1]][:, ::-1]#we need to reverse the cols
     dst = key1[match[:, 0]][:, ::-1]
-    model_robust, inliers = ransac((src, dst),ProjectiveTransform, min_samples=4, residual_threshold=1,max_trials=1022)
+    model_robust, inliers = ransac((src, dst),ProjectiveTransform, min_samples=5, residual_threshold=1.1,max_trials=1030)
     
 
 
