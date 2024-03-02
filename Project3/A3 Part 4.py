@@ -27,19 +27,20 @@ def part4():
     # -------- Feature detection and matching -----
 
     # TODO: Initiate ORB detector
+    #reference:https://scikit-image.org/docs/stable/auto_examples/features_detection/plot_orb.html
     from skimage.feature import ORB, match_descriptors
     # ...
-    d = ORB(n_keypoints=1000)
+    descriptor_extractor = ORB(n_keypoints=500)
 
     # TODO: Find the keypoints and descriptors
     # ...
-    d.detect_and_extract(image0)
-    key1 = d.keypoints
-    des1 = d.descriptors
+    descriptor_extractor.detect_and_extract(image0)
+    key1 = descriptor_extractor.keypoints
+    des1 = descriptor_extractor.descriptors
 
-    d.detect_and_extract(image1)
-    key2 = d.keypoints
-    des2 = d.descriptors
+    descriptor_extractor.detect_and_extract(image1)
+    key2 = descriptor_extractor.keypoints
+    des2 = descriptor_extractor.descriptors
 
     # TODO: initialize Brute-Force matcher and exclude outliers. See match descriptor function.
     # ...
@@ -51,10 +52,11 @@ def part4():
     from skimage.measure import ransac
     from skimage.transform import ProjectiveTransform
     # ...
+    #reference:https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.ransac
     # model_robust, inliers = ransac ...
-    src = key2[match[:, 1]][:, ::-1]
+    src = key2[match[:, 1]][:, ::-1]#we need to reverse the cols
     dst = key1[match[:, 0]][:, ::-1]
-    model_robust, inliers = measure.ransac((src, dst),ProjectiveTransform, min_samples=4, residual_threshold=1,max_trials=1000)
+    model_robust, inliers = ransac((src, dst),ProjectiveTransform, min_samples=4, residual_threshold=1,max_trials=1022)
     
 
 
@@ -101,7 +103,7 @@ def part4():
                 output_shape=output_shape)
 
     plt.subplot(223),plt.imshow(image0_, cmap="gray"),plt.title("Warped first image")
-    plt.subplot(224),plt.imshow(image1_, cmap="gray"),plt.title("Warped first image")
+    plt.subplot(224),plt.imshow(image1_, cmap="gray"),plt.title("Warped second image")
     plt.show()
 
     #An alpha channel is added to the warped images before merging them into a single image:
