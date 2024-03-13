@@ -107,7 +107,7 @@ def part1():
     # TODO: Detect regional minima within the DoG volume. You can check out scipy.ndimage.filters.minimum_filter. 
 
     local_minima = ...
-    local_minima=scipy.ndimage.filters.minimum_filter(DoG,size=18)
+    local_minima=scipy.ndimage.filters.minimum_filter(DoG,size=25)
 
 
     # Plotting
@@ -290,6 +290,7 @@ def iterativeMinFollowing(img, markers):
                     else:
                         n_unmarked_pix += 1
         if n_unmarked_pix == 0:
+            print('n_unmarked_pix: ', n_unmarked_pix)
             break
         
         
