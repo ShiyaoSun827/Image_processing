@@ -8,7 +8,6 @@ import scipy.ndimage
 import math
 import cv2
 from skimage.measure import find_contours
-from scipy.ndimage.filters import minimum_filter
 
 # ======== DO NOT EDIT imreconstruct =========
 def imreconstruct(marker, mask):
@@ -57,8 +56,7 @@ def part1():
     # NOTE: You can use filters.gaussian.
     sig = 5
 
-    #J = ...
-    J = filters.gaussian(I,sig)
+    J = ...
 
     # Plotting Input image and Blurred image
     plt.figure(figsize=(10,8))
@@ -83,10 +81,6 @@ def part1():
 
     #TODO: Create DoG levels
     # ...
-    DoG[:, :, 0]=filters.gaussian(J, sigmas[0]) - filters.gaussian(J, sigmas[1])
-    DoG[:, :, 1]=filters.gaussian(J,sigmas[1]) - filters.gaussian(J, sigmas[2]) 
-    DoG[:, :, 2]=filters.gaussian(J,sigmas[2]) -  filters.gaussian(J, sigmas[3])
-   
 
 
     level1 = DoG[:, :, 0]
@@ -106,8 +100,7 @@ def part1():
 
     # TODO: Detect regional minima within the DoG volume. You can check out scipy.ndimage.filters.minimum_filter. 
 
-    #local_minima = ...
-    local_minima=scipy.ndimage.filters.minimum_filter(DoG,size=18)
+    local_minima = ...
 
 
     # Plotting
@@ -119,22 +112,18 @@ def part1():
 
     # TODO: Convert local_minima to a binary image A (Check the stackoverflow discussion linked on e-class for reference)
 
-    #A = ...
-    A = np.zeros([h, w, 3])
-    A[DoG==local_minima] = 1 
+    A = ...
 
 
     # TODO: Collapse this 3D binary image into a single channel image and assign to variable B (Check out np.sum)
 
-    #B = ...
-    B = np.sum(A, axis=2) 
+    B = ...
 
 
     # TODO: Show the locations of all non-zero entries in this collapsed array overlaid on the input image as red points.
 
     # Check out np.nonzero()
-    #[y,x] = ...
-    [y,x] = np.nonzero(B)
+    [y,x] = ...
 
 
     # Plotting
@@ -153,20 +142,16 @@ def part1():
     J = img_as_ubyte(J)
 
     # TODO: Apply Li thresholding on the blurred image using filters.threshold_li to obtain the optimal threshold for this image
-    #threshold = ...
-    threshold =  filters.threshold_li(J)
+    threshold = ...
 
     # TODO: Remove all minima in the output image (B) of "Obtain a rough estimate of blob locations" (Part 1, q2) where pixel values 
     #          are less than the obtained threshold. Assign this output to variable final
 
-    #final = ...
-    final = B.copy()
-    final[J < threshold] = 0
+    final = ...
 
 
     # TODO: Show the remaining minima locations overlaid on the input image as red points. Once again, you can use np.nonzero()
-    #[y, x] = ...
-    [y, x] = np.nonzero(final)
+    [y, x] = ...
 
 
     # Plotting
@@ -228,11 +213,7 @@ def is_4connected(row, col, row_id, col_id):
 
     """
 
-    Parameter=[[row-1,col],[row+1,col],[row,col-1],[row,col+1]]
-    if [row_id,col_id] in Parameter:
-        return True 
-    else:
-        return False 
+    pass
 
 
 # TO - DO: Complete the function getRegionalMinima
@@ -241,14 +222,6 @@ def getRegionalMinima(img):
     h, w = img.shape
     
     #Your code here
-    index = 1
-    
-    for row in range(h):
-        for col in range(w):
-            min_row_id, min_col_id = getSmallestNeighborIndex(img, row, col) 
-            if img[row,col] <= img[min_row_id,min_col_id]:
-                markers[row,col] = index
-                index += 1 
 
 
     return markers
@@ -281,16 +254,7 @@ def iterativeMinFollowing(img, markers):
                 
                 #Your code here
 
-                if markers_copy[row, col] != 0:
-                    continue
-                else:
-                    min_row_id, min_col_id = getSmallestNeighborIndex(img, row, col)
-                    if  markers_copy[min_row_id,min_col_id] != 0:
-                        markers_copy[row,col] = markers_copy[min_row_id,min_col_id]
-                    else:
-                        n_unmarked_pix += 1
-        if n_unmarked_pix == 0:
-            break
+                pass
         
         
         # NOTE!!: Please make sure to comment the below two print statements and i+=1 before submitting. 
@@ -381,4 +345,4 @@ def part2(final):
 
 if __name__  == "__main__":
     final = part1()
-    part2(final.astype(int))
+    part2(final)
