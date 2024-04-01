@@ -391,13 +391,14 @@ def part1_encoder():
 
     # TODO: Calculate percentage of pixel locations with non-zero values before and after to measure degree of compression 
     before = before_index / (Height * Width)
-    after = after_index / (Height * Width)
+    
+    after = before_index / after_index if after_index != 0 else 0
     
     # Print statements as shown in eClass
     ###### Your code here ######
     print('Percentage of non-zero elements in Luma channel:')
     print(f"Before compression: {before * 100}%")
-    print(f"After compression: {after * 100}%")
+    print(f"After compression: {after}%")
     
 
 
