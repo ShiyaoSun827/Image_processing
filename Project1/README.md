@@ -1,58 +1,56 @@
+# Advanced Histogram Processing Techniques
 
-# Project 1:
+## Overview
+This project implements sophisticated image processing techniques focused on histogram computation, equalization, comparison, and matching. These methods are essential in computer vision, medical imaging, and machine learning applications, showcasing expertise in low-level image processing and statistical analysis.
 
+## Key Technologies and Techniques
+- **Manual Histogram Computation**: Directly computing image histograms without relying on built-in functions, demonstrating a deep understanding of pixel intensity distributions.
+- **Histogram Equalization**: Implementing contrast enhancement using cumulative distribution function (CDF) transformations, significantly improving image clarity.
+- **Histogram Comparison**: Utilizing **Bhattacharyya Coefficient** for quantitative similarity measurement between histograms, a technique widely used in pattern recognition and statistical inference.
+- **Histogram Matching**: Executing precise histogram transformation techniques to modify one image’s distribution to match another’s, an advanced concept applied in photometric normalization and style transfer.
+- **RGB and Grayscale Processing**: Handling both color and monochrome images, applying transformations per channel, and combining results for realistic visual adjustments.
+- **Matplotlib for Data Visualization**: Effectively plotting and visualizing histograms, equalized images, and matched images for comparative analysis.
+- **NumPy for Efficient Computation**: Leveraging NumPy for matrix operations and histogram calculations, ensuring optimal performance and scalability.
 
+## Implementation Details
+### 1. Histogram Computation
+- Manually compute a 64-bin grayscale histogram from pixel intensities.
+- Compare with NumPy’s histogram function to validate accuracy.
 
+### 2. Histogram Equalization
+- Compute the image’s cumulative histogram and apply equalization.
+- Improve contrast by redistributing intensity levels.
 
-## Part I: Histogram Computation
+### 3. Histogram Comparison
+- Convert images to grayscale and compute 256-bin histograms.
+- Normalize histograms and calculate the Bhattacharyya Coefficient.
 
-- Read the grayscale image `test.jpg`.
-- Compute a 64-bin gray scale histogram without using built-in histogram functions.
-- Plot the computed histogram.
-- Compare with `numpy`'s histogram function by plotting both histograms side-by-side.
+### 4. Histogram Matching
+#### **Grayscale Matching:**
+- Adjust the pixel intensity mapping of one image to match another.
+- Utilize CDF-based transformations to achieve smooth transitions.
 
-### Expected Output
+#### **RGB Matching:**
+- Perform per-channel histogram transformations in the RGB space.
+- Seamlessly integrate results for a perceptually coherent image transformation.
 
-- Two histograms that should be identical.
+## Execution
+Run the script with:
+```bash
+python A1_submission.py
+```
+This will sequentially execute all processing techniques, delivering results in visual plots and computed metrics.
 
-## Part II: Histogram Equalization
+## Applications and Use Cases
+- **Medical Image Processing**: Enhancing contrast in medical scans such as X-rays and MRIs.
+- **Computer Vision**: Preprocessing images for better feature extraction in deep learning models.
+- **Photography and Graphics**: Correcting exposure and adapting color distributions in image enhancement workflows.
+- **Security and Surveillance**: Improving low-light images for better clarity in CCTV footage.
 
-- Perform 64-bin grayscale histogram equalization on `test.jpg`.
-- Plot the original image and histogram, alongside the equalized image and histogram.
-- No skimage functions (or equivalents) are to be used for this part.
+## References
+- [Histogram Equalization - Wikipedia](https://en.wikipedia.org/wiki/Histogram_equalization)
+- [Bhattacharyya Distance - Wikipedia](https://en.wikipedia.org/wiki/Bhattacharyya_distance)
+- [Histogram Matching - Towards Data Science](https://towardsdatascience.com/histogram-matching-ee3a67b4cbc1)
 
-### Expected Output
-
-- Original and equalized image with their respective histograms.
-
-## Part III: Histogram Comparing
-
-- Compare the 256-bin histograms of `day.jpg` and `night.jpg`.
-- Convert images to grayscale and compute their histograms.
-- Print the Bhattacharyya Coefficient of the two histograms.
-
-### Expected Output
-
-- Bhattacharyya Coefficient value (example: `0.8671201323799057`).
-
-## Part IV: Histogram Matching
-
-- Match the histograms of `day.jpg` and `night.jpg`.
-
-### Grayscale Histogram Matching
-
-- Match 256-bin histogram of the `day` image to the `night` image, creating a darker version of the `day` image.
-- Display the grayscale `day`, `night`, and matched `day` images side by side.
-
-### RGB Histogram Matching
-
-- Repeat the grayscale matching process for each channel of the RGB images.
-- Show the RGB `day`, `night`, and matched `day` images side by side.
-
-### Expected Output
-
-- Grayscale and RGB images before and after histogram matching.
-
-
-
+This project exemplifies expertise in fundamental and advanced image processing techniques, combining computational efficiency with practical applications in real-world scenarios.
 
