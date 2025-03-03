@@ -37,7 +37,7 @@ This project implements sophisticated image processing techniques focused on his
 ## Execution
 Run the script with:
 ```bash
-python A1_submission.py
+python main.py
 ```
 This will sequentially execute all processing techniques, delivering results in visual plots and computed metrics.
 
