@@ -11,4 +11,4 @@
 
 ## [Project VI: Computational Cell Analysis ,Image Segmentation and Object Detection](Project4)
 
-## [Project V: JPEG Compression and Decompression](project5)
+## [Project V: JPEG Compression and Decompression](Project5)
