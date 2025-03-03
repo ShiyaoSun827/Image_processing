@@ -3,5 +3,5 @@
 
 
 
-## [Project1：Advanced Histogram Processing Techniques](Project1：Advanced Histogram Processing Techniques)
+## [Project I: Image Basics ](Project1)
 
