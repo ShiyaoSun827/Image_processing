@@ -1,6 +1,6 @@
 # Cutting-Edge Computational Photography and Image Processing
 
-## Overview: Advanced Computational Imaging and Transformations
+## Overview: Advanced Cutting-Edge Computational Photography and Transformations
 
 This project demonstrates expertise in computational imaging and transformation techniques, leveraging advanced image processing, computer vision, and statistical analysis. It integrates powerful methodologies such as Bayer filter demosaicing, dithering, affine transformations, and feature-based image stitching. The implementation optimizes algorithms for efficiency, precision, and real-world applicability.
 
