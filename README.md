@@ -12,3 +12,5 @@
 ## [Project VI: Computational Cell Analysis ,Image Segmentation and Object Detection](Project4)
 
 ## [Project V: JPEG Compression and Decompression](Project5)
+
+## [Project IV: Deep Learning-Based Visual Recognition](Project6)
